@@ -75,17 +75,17 @@ void readMessage(SOCKET clientSocket)
         return;
     }
 
-    uint32_t massegeLength;
-    std::memcpy(&massegeLength, receiveBufferMessageSize, 4);
-    massegeLength = int(ntohl(massegeLength));
+    uint32_t messageLength;
+    std::memcpy(&messageLength, receiveBufferMessageSize, 4);
+    messageLength = int(ntohl(messageLength));
 
-    char* receiveBufferMessage = new char[massegeLength];
+    char* receiveBufferMessage = new char[messageLength];
     int totalReceived = 0;
 
-    while (totalReceived < massegeLength)
+    while (totalReceived < messageLength)
     {
         std::cout<<"totalReceived length: "<<totalReceived<<std::endl;
-        int rbyteCount = recv(clientSocket, receiveBufferMessage + totalReceived, massegeLength - totalReceived, 0);
+        int rbyteCount = recv(clientSocket, receiveBufferMessage + totalReceived, messageLength - totalReceived, 0);
         if (rbyteCount <= 0)
         {
             delete[] receiveBufferMessage;
@@ -152,17 +152,17 @@ int main() {
                 break;
             }
 
-            uint32_t massegeLength;
-            std::memcpy(&massegeLength, receiveBufferMessageSize, 4);
-            massegeLength = int(ntohl(massegeLength));
+            uint32_t messageLength;
+            std::memcpy(&messageLength, receiveBufferMessageSize, 4);
+            messageLength = int(ntohl(messageLength));
 
-            char* receiveBufferMessage = new char[massegeLength];
+            char* receiveBufferMessage = new char[messageLength];
             int totalReceived = 0;
 
-            while (totalReceived < massegeLength)
+            while (totalReceived < messageLength)
             {
                 //std::cout<<"totalReceived length: "<<totalReceived<<std::endl;
-                int rbyteCount = recv(clientSocket, receiveBufferMessage + totalReceived, massegeLength - totalReceived, 0);
+                int rbyteCount = recv(clientSocket, receiveBufferMessage + totalReceived, messageLength - totalReceived, 0);
                 if (rbyteCount <= 0)
                 {
                     delete[] receiveBufferMessage;
@@ -175,6 +175,11 @@ int main() {
         else
         {
             readMessage(clientSocket);
+            if (serverAnswear=='B')
+            {
+                std::cout<<"disconnect"<<std::endl;
+                break;
+            }
         }
     }
     return 0;
